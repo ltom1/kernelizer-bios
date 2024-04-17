@@ -1,0 +1,5 @@
+*.o
+*.ELF
+*.BIN
+*.mem
+*.img

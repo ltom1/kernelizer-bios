@@ -1,0 +1,7 @@
+-Wall 
+-Isrc/include 
+-masm=intel 
+-m16 
+-ffreestanding 
+-fno-pie 
+-fno-stack-protector
