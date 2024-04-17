@@ -36,12 +36,15 @@ default: clean run
 run: $(IMG)
 	$(VM) -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio -hda $<
 
+# IMPORTANT: gdb is not made for 16-bit real mode
+# local variables will not be correct in gdb (they work fine in qemu though)
 debug: $(IMG)
 	$(TERM) --working-directory $(WORKING_DIR) -e $(VM) -s -S -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio -hda $< &
 	$(DBG) BOOT.ELF \
         -ex 'target remote localhost:1234' \
         -ex 'layout src' \
         -ex 'layout regs' \
+		-ex 'set disassembly-flavor intel' \
         -ex 'break MBR_START' \
         -ex 'continue'
 

@@ -2,18 +2,23 @@ bits    16      ; cpu starts in real mode: 16 bit instructions
 
 
 ; export for second part and debugging
-global  boot_drive
 global  MBR_START
 global  disk_read
 global  dap
+global  boot_drive
 
-extern  PREP_START
+extern  bootmain
 
 section  .mbr   exec    ; see linker.ld
 
 
 ; execution starts here
 MBR_START:
+
+    ; flush the code segment register cs by doing a far jump
+    jmp     0x0000:.flush
+    
+.flush:
 
     ; initialize segments
     cli
@@ -26,6 +31,9 @@ MBR_START:
     ; initialize stack
     xor     ax, ax
     mov     ss, ax
+    mov     ax, BOOT_STACK
+    mov     sp, ax
+    mov     bp, ax
     sti
     
     ; save the boot drive number (put in dl by the BIOS)
@@ -35,8 +43,8 @@ MBR_START:
     ; the correct values for reading are already present in the dap (see at the bottom)
     call    disk_read
 
-    ; jump to the start of the second part (prep.asm) that prepares the environment for C
-    jmp     PREP_START
+    ; jump to the start of the second part that is already written in C
+    jmp     bootmain
 
 
 ; reads sectors from the boot drive according to dap
@@ -68,12 +76,16 @@ disk_read:
 
 boot_drive:         db      0x00
 
+BOOT_STACK          equ     0x7c00
+
 BOOT_PART_BOOTABLE  equ     0x7c00 + 0x1be
 STAGE2_LOAD_ADDR    equ     0x7c00 + 0x200
 
 STAGE2_SIZE_SECS    equ     0x10
 STAGE2_START_LBA    equ     0x01
 
+
+align 4
 
 ; structur of the DAP (Disk Access Packet)
 ; used for reading sectors from a disk using BIOS interrupts
