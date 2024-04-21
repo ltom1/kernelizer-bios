@@ -27,7 +27,7 @@ LINKER_SCRIPT=src/linker.ld
 IMG=os.img
 IMG_SIZE_SEC=6000000
 
-BOOT_SIZE_SEC=10
+BOOT_SIZE_SEC=32
 
 
 default: clean run
@@ -45,7 +45,7 @@ debug: $(IMG)
         -ex 'layout src' \
         -ex 'layout regs' \
 		-ex 'set disassembly-flavor intel' \
-        -ex 'break MBR_START' \
+		-ex 'break bootmain' \
         -ex 'continue'
 
 $(IMG): BOOT.BIN

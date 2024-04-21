@@ -12,8 +12,7 @@ extern  bootmain
 section  .mbr   exec    ; see linker.ld
 
 
-; execution starts here
-MBR_START:
+; execution starts here MBR_START:
 
     ; flush the code segment register cs by doing a far jump
     jmp     0x0000:.flush
@@ -63,7 +62,7 @@ disk_read:
 ; displays an error message and halts
 .error:
     mov     al, 0x44    ; display character 'D' for 'D'isk
-    mov     ah, 0x0e    ; int 0x10 + ah=0x0e -> write character in TTY mode
+    mov     ah, 0x0e    ; BIOS int 0x10 + ah=0x0e -> write character in TTY mode
     int     0x10
 
     ; properly halt the processor (hlt on its own is not enough, neither is a loop)
@@ -81,7 +80,7 @@ BOOT_STACK          equ     0x7c00
 BOOT_PART_BOOTABLE  equ     0x7c00 + 0x1be
 STAGE2_LOAD_ADDR    equ     0x7c00 + 0x200
 
-STAGE2_SIZE_SECS    equ     0x10
+STAGE2_SIZE_SECS    equ     0x20
 STAGE2_START_LBA    equ     0x01
 
 
