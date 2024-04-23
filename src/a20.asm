@@ -190,8 +190,11 @@ a20_check:
     ; after the second try, if it kept matching, it is pretty sure that the a20 line is disabled
     .disabled:                      
         mov     ax, 0               ; return 0
+        mov     es, ax              ; clear es
         ret
 
     .enabled:                       ; a20 is already enabled
+        mov     ax, 0
+        mov     es, ax              ; clear es
         mov     ax, 1               ; return 1
         ret
