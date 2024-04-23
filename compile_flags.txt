@@ -5,3 +5,15 @@
 -ffreestanding 
 -fno-pie 
 -fno-stack-protector
+
+-Wall
+-Isrc/include
+-masm=intel
+-mcmodel=large
+-mno-red-zone
+-ffreestanding
+-fno-pie
+-fno-stack-protector
+-DVERSION="v0.0.0"
+-DDEBUG
+

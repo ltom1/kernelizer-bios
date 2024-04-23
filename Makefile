@@ -1,3 +1,5 @@
+VERSION=\"v0.0.0\"
+
 # programs
 AS=nasm
 CC=gcc
@@ -72,7 +74,7 @@ BOOT.ELF: $(BOOT_HEADERS) $(BOOT_ASM_OBJ) $(BOOT_C_OBJ) $(LINKER_SCRIPT)
 	$(AS) -g3 -F dwarf -f elf64 $< -o $@
 
 %.o: %.c
-	$(CC) -Wall -Isrc/include -masm=intel -mcmodel=large -mno-red-zone -ffreestanding -fno-pie -fno-stack-protector -g -c $< -o $@
+	$(CC) -Wall -Isrc/include -masm=intel -mcmodel=large -mno-red-zone -ffreestanding -fno-pie -fno-stack-protector -DVERSION=$(VERSION) -DDEBUG -g -c $< -o $@
 
 
 # create the image file

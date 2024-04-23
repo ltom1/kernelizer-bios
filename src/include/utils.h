@@ -1,5 +1,6 @@
 #pragma once
 
+// utilities for operating on large chunks of memory
 
 #include <types.h>
 
