@@ -6,13 +6,17 @@ global  MBR_START
 global  disk_read
 global  dap
 global  boot_drive
+global  error_a20
+global  error_mmap
+global  error_lm
 
-extern  bootmain
+extern  PREP_START
 
-section  .mbr   exec    ; see linker.ld
+section .mbr   exec    ; see linker.ld
 
 
-; execution starts here MBR_START:
+; execution starts here 
+MBR_START:
 
     ; flush the code segment register cs by doing a far jump
     jmp     0x0000:.flush
@@ -42,8 +46,8 @@ section  .mbr   exec    ; see linker.ld
     ; the correct values for reading are already present in the dap (see at the bottom)
     call    disk_read
 
-    ; jump to the start of the second part that is already written in C
-    jmp     bootmain
+    ; jump to the start of the second part of the bootloader
+    jmp     PREP_START
 
 
 ; reads sectors from the boot drive according to dap
@@ -56,12 +60,27 @@ disk_read:
     mov     dl, [boot_drive]    ; read from the current boot drive
     int     0x13
 
-    jc      .error              
+    jc      error_disk
     ret
 
-; displays an error message and halts
-.error:
-    mov     al, 0x44    ; display character 'D' for 'D'isk
+
+; display an error message and halt
+error_disk:
+    mov     al, 0x44    ; display character 'D'
+    jmp     error_common
+
+error_a20:
+    mov     al, 0x41    ; display character 'A'
+    jmp     error_common
+
+error_mmap:
+    mov     al, 0x4d    ; display character 'M'
+    jmp     error_common
+
+error_lm:
+    mov     al, 0x4c    ; display character 'L'
+
+error_common:
     mov     ah, 0x0e    ; BIOS int 0x10 + ah=0x0e -> write character in TTY mode
     int     0x10
 

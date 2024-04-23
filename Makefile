@@ -45,6 +45,9 @@ debug: $(IMG)
         -ex 'layout src' \
         -ex 'layout regs' \
 		-ex 'set disassembly-flavor intel' \
+		-ex 'break MBR_START' \
+		-ex 'break PREP_START' \
+		-ex 'break LM_START' \
 		-ex 'break bootmain' \
         -ex 'continue'
 
@@ -62,14 +65,14 @@ BOOT.BIN: BOOT.ELF
 	$(OBJCPY) -O binary $< $@
 
 BOOT.ELF: $(BOOT_HEADERS) $(BOOT_ASM_OBJ) $(BOOT_C_OBJ) $(LINKER_SCRIPT)
-	$(LK) -m elf_i386 -o $@ -T $(LINKER_SCRIPT) $(BOOT_ASM_OBJ) $(BOOT_C_OBJ)
+	$(LK) -m elf_x86_64 -o $@ -T $(LINKER_SCRIPT) $(BOOT_ASM_OBJ) $(BOOT_C_OBJ)
 
 
 %.o: %.asm
-	$(AS) -g3 -F dwarf -f elf32 $< -o $@
+	$(AS) -g3 -F dwarf -f elf64 $< -o $@
 
 %.o: %.c
-	$(CC) -Wall -Isrc/include -masm=intel -m16 -ffreestanding -fno-pie -fno-stack-protector -g -c $< -o $@
+	$(CC) -Wall -Isrc/include -masm=intel -mcmodel=large -mno-red-zone -ffreestanding -fno-pie -fno-stack-protector -g -c $< -o $@
 
 
 # create the image file

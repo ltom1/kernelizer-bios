@@ -7,7 +7,7 @@ section .text
 
 ; detects the memory map
 ; loads it into buf  
-; returns the number of entries 
+; returns the number of entries or 0 (failure)
 mmap_detect:
 
     ; esi will be the entry count
