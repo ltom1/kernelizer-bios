@@ -28,7 +28,7 @@ PREP_START:
     call    mmap_detect
     cmp     eax, 0
     je      error_mmap
-    mov     dword [mmap_entries], eax 
+    mov     dword [n_mmap_entries], eax 
 
     ; check for long mode support
     call    lm_check
@@ -41,4 +41,4 @@ PREP_START:
 ; location of the memory region list
 MMAP_BUFFER         equ 0x1000
 
-mmap_entries:       dd  0x0000
+n_mmap_entries:     dd  0x0000
