@@ -7,10 +7,14 @@
 
 
 ata_t ata_drives[N_IDE_DRIVES] = {
-    { (drive_t) { TYPE_NONE, 0, ata_identify, ata_read, 0 }, ATA_PORTS_PRIMARY,     true,   0, 0 },
-    { (drive_t) { TYPE_NONE, 0, ata_identify, ata_read, 0 }, ATA_PORTS_PRIMARY,     false,  0, 0 },
-    { (drive_t) { TYPE_NONE, 0, ata_identify, ata_read, 0 }, ATA_PORTS_SECONDARY,   true,   0, 0 },
-    { (drive_t) { TYPE_NONE, 0, ata_identify, ata_read, 0 }, ATA_PORTS_SECONDARY,   false,  0, 0 },
+    { (drive_t) { DRIVE_NONE, 0, ata_identify, ata_read, 0 }, 
+        ATA_PORTS_PRIMARY,     true,   0, 0 },
+    { (drive_t) { DRIVE_NONE, 0, ata_identify, ata_read, 0 }, 
+        ATA_PORTS_PRIMARY,     false,  0, 0 },
+    { (drive_t) { DRIVE_NONE, 0, ata_identify, ata_read, 0 }, 
+        ATA_PORTS_SECONDARY,   true,   0, 0 },
+    { (drive_t) { DRIVE_NONE, 0, ata_identify, ata_read, 0 }, 
+        ATA_PORTS_SECONDARY,   false,  0, 0 },
 };
 
 
@@ -152,12 +156,12 @@ void ata_identify(void *self) {
         u8 lba2 = x86_inb(ATA_REG_LBA2(drive->port_base));
 
         if ((lba1 == ATAPI_LBA1) && (lba2 == ATAPI_LBA2)) {
-            drive->base.type = TYPE_ATAPI;
+            drive->base.type = DRIVE_ATAPI;
             return;
         }
 
         if ((lba1 == SATA_LBA1) && (lba2 == SATA_LBA2)) {
-            drive->base.type = TYPE_SATA;
+            drive->base.type = DRIVE_SATA;
             return;
         }
 
@@ -167,7 +171,7 @@ void ata_identify(void *self) {
     }
 
     // found an ATA drive
-    drive->base.type = TYPE_ATA;
+    drive->base.type = DRIVE_ATA;
 
     // look through drive information
     u16 cur_data;

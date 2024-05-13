@@ -4,11 +4,9 @@
 #include <tty.h>
 #include <log.h>
 #include <ata.h>
+#include <vfs.h>
+#include <fat32.h>
 
-u16 retabcd(void) {
-
-    return 0xabcd;
-}
 
 void bootmain(void) {
 
@@ -25,7 +23,21 @@ void bootmain(void) {
         ata_identify(&ata_drives[i]);
 
 
-    ata_read(&ata_drives[0], (u8*)0x4000, 0x0000000000000000, 2);
+    fat32_t fat32 = { 
+        (fs_t) { 
+            &ata_drives[0].base, 
+            partitions, 
+            fat32_init,
+            fat32_load_file
+        }, 
+        (bpb_t*)0x7000, 
+        (u8*)0x4000,
+        (u8*)0x5000,
+        (u8*)0x6000
+    };
+
+    fat32.base.init(&fat32);
+    fat32.base.read_file(&fat32, "/TEST.TXT", (u8*)0x100000, 100);
 
 
     while (1);

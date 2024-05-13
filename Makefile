@@ -29,6 +29,10 @@ LINKER_SCRIPT=src/linker.ld
 IMG=os.img
 IMG_SIZE_SEC=6000000
 
+LOOP=/dev/loop0
+LOOPP1=/dev/loop0p1
+LOOPP2=/dev/loop0p2
+
 BOOT_SIZE_SEC=32
 
 
@@ -82,6 +86,11 @@ img:
 	$(DD) if=/dev/zero of=$(IMG) bs=512 count=$(IMG_SIZE_SEC)
 	# FDISK_COMMANDS contains the commands for the partitioning
 	$(FDISK) $(IMG) < $(FDISK_COMMANDS)
+
+	sudo losetup -P $(LOOP) $(IMG)
+	sudo mkfs.vfat -F32 -f2 -R16 -s8 -S512 -v $(LOOPP1)
+	sudo mkfs.vfat -F32 -f2 -R16 -s8 -S512 -v $(LOOPP2)
+	sudo losetup -d $(LOOP)
 
 
 clean: 
