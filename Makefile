@@ -33,6 +33,9 @@ LOOP=/dev/loop0
 LOOPP1=/dev/loop0p1
 LOOPP2=/dev/loop0p2
 
+MNT1=p1
+MNT2=p2
+
 BOOT_SIZE_SEC=32
 
 
@@ -90,6 +93,23 @@ img:
 	sudo losetup -P $(LOOP) $(IMG)
 	sudo mkfs.vfat -F32 -f2 -R16 -s8 -S512 -v $(LOOPP1)
 	sudo mkfs.vfat -F32 -f2 -R16 -s8 -S512 -v $(LOOPP2)
+	sudo losetup -d $(LOOP)
+
+
+# mount both partitions
+mount:
+	sudo losetup -P $(LOOP) $(IMG)
+	mkdir $(MNT1)
+	mkdir $(MNT2)
+	sudo mount $(LOOPP1) $(MNT1)
+	sudo mount $(LOOPP2) $(MNT2)
+
+# unmount both partitions)
+umount:
+	sudo umount $(LOOPP1)
+	sudo umount $(LOOPP2)
+	rmdir $(MNT1)
+	rmdir $(MNT2)
 	sudo losetup -d $(LOOP)
 
 

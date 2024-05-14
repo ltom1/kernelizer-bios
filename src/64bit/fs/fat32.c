@@ -153,7 +153,7 @@ u64 fat32_load_file(void *self, const char *path, u8 *buf, u64 n_clusters) {
 
 repeat:
     // loop throug all entries in the current directory
-    for (u8 i = 0; i < (fs->secs_per_cluster * 512 / sizeof(fat32_dir_entry_t)); i++) {
+    for (u64 i = 0; i < (fs->secs_per_cluster * 512 / sizeof(fat32_dir_entry_t)); i++) {
 
         cur_entry = (fat32_dir_entry_t*)cur_dir + i;
         skip = fat32_cmp_path(path, cur_entry->name);
@@ -173,10 +173,16 @@ repeat:
         // entry is a subdirectory
         // put it into the cache
         fat32_load_cluster(fs, fs->cache_dir, cur_cluster);
+        
+        // next object of the file path
+        path += skip;
 
         // select the next directory
         cur_dir = (fat32_dir_entry_t*)fs->cache_dir;
-        i = 0;  // start again at the first entry
+
+        // skip . and .. in subdirectory
+        // i will be incremented again by the loop
+        i = 1;
     }
 
     // match found
