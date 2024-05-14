@@ -36,7 +36,7 @@ LOOPP2=/dev/loop0p2
 MNT1=p1
 MNT2=p2
 
-BOOT_SIZE_SEC=32
+BOOT_SIZE_SEC=64
 
 
 default: clean run

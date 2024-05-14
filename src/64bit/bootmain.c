@@ -37,8 +37,6 @@ void bootmain(void) {
     };
 
     fat32.base.init(&fat32);
-    fat32.base.read_file(&fat32, "/BOOT/BOOT.CFG", (u8*)0x100000, 100);
-
 
     while (1);
 }

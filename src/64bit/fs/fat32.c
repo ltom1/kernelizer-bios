@@ -58,7 +58,7 @@ u32 fat32_next_cluster(fat32_t *self, u32 cur_cluster) {
                 self->secs_per_cluster);
     }
 
-    return *(u32*)self->cache_fat + off_entry * sizeof(u32);
+    return *(u32*)(self->cache_fat + off_entry * sizeof(u32));
 }
 
 
