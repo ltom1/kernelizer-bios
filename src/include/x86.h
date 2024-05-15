@@ -57,6 +57,28 @@ static INLINE void x86_outw(u16 port, u16 data) {
 }
 
 
+// reads a double word of data from an I/O port
+static INLINE u32 x86_ind(u16 port) {
+
+     u32 res;
+
+     // "=a" (res) -> eax into res
+     // "d" (port) -> port into edx
+     ASM("in eax, dx" : "=a" (res) : "d" (port) : "memory");
+
+     return res;
+}
+
+
+// writes a double word of data to an I/O port
+static INLINE void x86_outd(u16 port, u32 data) {
+
+     // "a" (data) -> data into eax
+     // "d" (port) -> port into edx
+     ASM("out dx, eax" : : "a" (data), "d" (port) : "memory");
+}
+
+
 // disables interrupts
 static INLINE void x86_cli(void) {
     ASM("cli" : : : "memory");

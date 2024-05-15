@@ -6,6 +6,7 @@
 #include <ata.h>
 #include <vfs.h>
 #include <fat32.h>
+#include <pci.h>
 
 
 void bootmain(void) {
@@ -37,6 +38,8 @@ void bootmain(void) {
     };
 
     fat32.base.init(&fat32);
+
+    pci_scan_all();
 
     while (1);
 }

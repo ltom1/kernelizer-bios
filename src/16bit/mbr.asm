@@ -105,7 +105,7 @@ STAGE2_START_LBA    equ     0x01
 
 align 4
 
-; structur of the DAP (Disk Access Packet)
+; structure of the DAP (Disk Access Packet)
 ; used for reading sectors from a disk using BIOS interrupts
 dap:
     db	0x10                ; size 16 bytes
