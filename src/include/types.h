@@ -11,6 +11,7 @@ typedef unsigned    long long   u64;
 typedef signed      long long   s64;
 
 #define NORETURN    __attribute((noreturn))
+#define INTERRUPT   __attribute((interrupt))
 #define PACKED      __attribute((packed))
 #define INLINE      inline __attribute((always_inline))
 #define ALIGNED(n)  __attribute((aligned(n)))
