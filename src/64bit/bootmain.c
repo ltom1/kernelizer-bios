@@ -7,6 +7,8 @@
 #include <vfs.h>
 #include <fat32.h>
 #include <pci.h>
+#include <idt.h>
+#include <pic.h>
 
 
 void bootmain(void) {
@@ -39,7 +41,10 @@ void bootmain(void) {
 
     fat32.base.init(&fat32);
 
+    idt_init();
+    pic_init();
+
     pci_scan_all();
 
-    while (1);
+    while(1);
 }
