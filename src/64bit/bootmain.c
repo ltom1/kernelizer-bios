@@ -9,6 +9,25 @@
 #include <pci.h>
 #include <idt.h>
 #include <pic.h>
+#include <heap.h>
+#include <layout.h>
+
+
+u8 drives[PAGE_SIZE];
+heap_t heap_drives = {
+    PAGE_SIZE,
+    PAGE_SIZE,
+    0,
+    drives
+};
+
+u8 filesystems[PAGE_SIZE];
+heap_t heap_filesystems = {
+    PAGE_SIZE,
+    PAGE_SIZE,
+    0,
+    filesystems
+};
 
 
 void bootmain(void) {
@@ -41,10 +60,12 @@ void bootmain(void) {
 
     fat32.base.init(&fat32);
 
+    // interrupts
     idt_init();
     pic_init();
 
+    // scan devices
     pci_scan_all();
-
+   
     while(1);
 }
