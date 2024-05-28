@@ -43,7 +43,8 @@ default: clean run
 
 
 run: $(IMG)
-	$(VM) -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio -hda $< #\
+	$(VM) -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio \
+		-hda $< \
 #		-drive if=none,id=usb,format=raw,file=usb.img \
 # 		-device nec-usb-xhci,id=xhci \
 #		-device usb-storage,bus=xhci.0,drive=usb \
@@ -91,7 +92,6 @@ BOOT.ELF: $(BOOT_HEADERS) $(BOOT_ASM_OBJ) $(BOOT_C_OBJ) $(LINKER_SCRIPT)
 
 %.o: %.c
 	$(CC) -Wall -Isrc/include -masm=intel -mcmodel=large -mno-red-zone -ffreestanding -fno-pie -fno-stack-protector -DVERSION=$(VERSION) -DDEBUG -g -c $< -o $@
-
 
 # create the image file
 img: 

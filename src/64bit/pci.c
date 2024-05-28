@@ -3,6 +3,7 @@
 #include <tty.h>
 #include <x86.h>
 #include <pci.h>
+#include <ide.h>
 
 
 // scans all PCI devices and initializes them if possible
@@ -39,7 +40,8 @@ void pci_drive_identify(u16 bus, u8 dev, u8 func) {
 
     switch (class) {
         case PCI_CLASS_IDE:
-            log_info("Found IDE device \n");
+            log_info("Found IDE device\n");
+            ide_initialize(bus, dev, func);
             break;
         case PCI_CLASS_ATA:
             log_info("Found ATA device\n");

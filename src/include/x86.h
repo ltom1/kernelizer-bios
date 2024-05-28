@@ -12,9 +12,11 @@
 //  - "memory" should prevent gcc from optimizing the instruction away
 //  - same thing for static INLINE
 
+typedef u16 port_t;
+
 
 // reads a byte of data from an I/O port
-static INLINE u8 x86_inb(u16 port) {
+static INLINE u8 x86_inb(port_t port) {
 
      u8 res;
 
@@ -27,7 +29,7 @@ static INLINE u8 x86_inb(u16 port) {
 
 
 // writes a byte of data to an I/O port
-static INLINE void x86_outb(u16 port, u8 data) {
+static INLINE void x86_outb(port_t port, u8 data) {
 
      // "a" (data) -> data into eax
      // "d" (port) -> port into edx
@@ -36,7 +38,7 @@ static INLINE void x86_outb(u16 port, u8 data) {
 
 
 // reads a word of data from an I/O port
-static INLINE u16 x86_inw(u16 port) {
+static INLINE u16 x86_inw(port_t port) {
 
      u16 res;
 
@@ -49,7 +51,7 @@ static INLINE u16 x86_inw(u16 port) {
 
 
 // writes a word of data to an I/O port
-static INLINE void x86_outw(u16 port, u16 data) {
+static INLINE void x86_outw(port_t port, u16 data) {
 
      // "a" (data) -> data into eax
      // "d" (port) -> port into edx
@@ -58,7 +60,7 @@ static INLINE void x86_outw(u16 port, u16 data) {
 
 
 // reads a double word of data from an I/O port
-static INLINE u32 x86_ind(u16 port) {
+static INLINE u32 x86_ind(port_t port) {
 
      u32 res;
 
@@ -71,7 +73,7 @@ static INLINE u32 x86_ind(u16 port) {
 
 
 // writes a double word of data to an I/O port
-static INLINE void x86_outd(u16 port, u32 data) {
+static INLINE void x86_outd(port_t port, u32 data) {
 
      // "a" (data) -> data into eax
      // "d" (port) -> port into edx
