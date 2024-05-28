@@ -49,6 +49,9 @@ identify_start:
     u8 status = x86_inb(ATA_REG_STATUS(cmd));
     // not connected
     if (status == 0x00) {
+
+        if (slave) return;
+
         // try the other one
         slave = true;
         goto identify_start;
