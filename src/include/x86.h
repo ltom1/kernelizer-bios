@@ -113,3 +113,35 @@ static INLINE NORETURN void x86_hang(void) {
 static INLINE void x86_io_wait(void) {
     x86_outb(0x80, 0);
 }
+
+
+// writes multiple words of data from a memory address to an I/O port
+static INLINE void x86_outsw(port_t port, const void *src, u64 n_words) {
+
+    // clear direction flag
+    // repeat <n_words> times the outsw (write from memory to I/O port)
+    // + -> input and output at the same time (needs to be modified)
+    // "+S" (src)       -> src into rsi
+    // "+c" (n_words)   -> n_words into rcx
+    // "d" (port)       -> port into rdx
+	ASM("cld; rep; outsw"
+			: "+S"(src), "+c"(n_words)
+			: "d"(port)
+            : "memory");
+}
+
+
+// reads multiple words of data from an I/O port into memory
+static INLINE void x86_insw(port_t port, const void *dest, u64 n_words) {
+
+    // clear direction flag
+    // repeat <n_words> times the insw (read from I/O port into memory)
+    // + -> input and output at the same time (needs to be modified)
+    // "+D" (dest)      -> dest into rdi
+    // "+c" (n_words)   -> n_words into rcx
+    // "d" (port)       -> port into rdx
+	ASM("cld; rep; insw"
+			: "+D"(dest), "+c"(n_words)
+			: "d"(port)
+            : "memory");
+}
