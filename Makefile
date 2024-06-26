@@ -29,6 +29,9 @@ LINKER_SCRIPT=src/linker.ld
 IMG=os.img
 IMG_SIZE_SEC=6000000
 
+IMAGES=sd.img usb.img sata.img cdrom.img
+IMAGES_SIZE_SEC=1024
+
 LOOP=/dev/loop0
 LOOPP1=/dev/loop0p1
 LOOPP2=/dev/loop0p2
@@ -41,10 +44,14 @@ BOOT_SIZE_SEC=64
 
 default: clean run
 
+# initializes the environment
+init: img drives
+
 
 run: $(IMG)
 	$(VM) -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio \
 		-hda $< \
+		-cdrom cdrom.img \
 		-drive if=none,id=usb,format=raw,file=usb.img \
  		-device nec-usb-xhci,id=xhci \
 		-device usb-storage,bus=xhci.0,drive=usb \
@@ -58,7 +65,7 @@ run: $(IMG)
 # IMPORTANT: gdb is not made for 16-bit real mode
 # local variables will not be correct in gdb (they work fine in qemu though)
 debug: $(IMG)
-	$(TERM) --working-directory $(WORKING_DIR) -e $(VM) -s -S -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio -hda $< -drive if=none,id=usb,format=raw,file=usb.img -device nec-usb-xhci,id=xhci -device usb-storage,bus=xhci.0,drive=usb -drive if=none,id=sata,file=sata.img -device ahci,id=ahci -device ide-hd,bus=ahci.0,drive=sata -drive if=none,id=sd,format=raw,file=sd.img -device sdhci-pci -device sd-card,drive=sd &
+	$(TERM) --working-directory $(WORKING_DIR) -e $(VM) -s -S -d int,cpu_reset,guest_errors,page -no-reboot -debugcon stdio -hda $< -cdrom cdrom.img -drive if=none,id=usb,format=raw,file=usb.img -device nec-usb-xhci,id=xhci -device usb-storage,bus=xhci.0,drive=usb -drive if=none,id=sata,file=sata.img -device ahci,id=ahci -device ide-hd,bus=ahci.0,drive=sata -drive if=none,id=sd,format=raw,file=sd.img -device sdhci-pci -device sd-card,drive=sd &
 	$(DBG) BOOT.ELF \
         -ex 'target remote localhost:1234' \
         -ex 'layout src' \
@@ -103,6 +110,11 @@ img:
 	sudo mkfs.vfat -F32 -f2 -R16 -s8 -S512 -v $(LOOPP1)
 	sudo mkfs.vfat -F32 -f2 -R16 -s8 -S512 -v $(LOOPP2)
 	sudo losetup -d $(LOOP)
+
+# create image files for each drive (QEMU can't use the same image multiple times)
+drives: $(IMAGES)
+$(IMAGES): $(IMG)
+	$(DD) if=$< of=$@ bs=512 count=$(IMAGES_SIZE_SEC)
 
 
 # mount both partitions

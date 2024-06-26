@@ -25,9 +25,9 @@ A 64-bit x86-64 work-in-progress legacy BIOS bootloader.
 
 You can compile and test the bootloader in QEMU by running the following commands:
 
-Create the Image
+Prepare all images
 ```sh
-make img 
+make init 
 ```
 
 Compile the bootloader
