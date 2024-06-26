@@ -81,10 +81,10 @@ u64 ata_read(void *self, u8 *dest, u64 lba, u64 n_secs) {
                     (u64)dest);
 
         // read data into memory (1 sector)
-        for (u64 i = 0; i < 256; i++) {
-            *(u16*)(dest + n_secs_read * 512 + i * 2) = 
-                x86_inw(ATA_REG_DATA(drive->ide.cmd));
-        }
+        x86_insw(
+                ATA_REG_DATA(drive->ide.cmd), 
+                dest + n_secs_read * 512,
+                256);
         n_secs_read++;
     }
     // return the bytes read

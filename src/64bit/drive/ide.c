@@ -6,6 +6,7 @@
 #include <x86.h>
 #include <ide.h>
 #include <ata.h>
+#include <atapi.h>
 #include <heap.h>
 
 
@@ -75,16 +76,17 @@ identify_start:
             atapi_t *atapi = heap_alloc(&heap_drives, sizeof(atapi_t));
             atapi->ide.base.type = DRIVE_ATAPI;
             atapi->ide.base.size = sizeof(atapi_t);
-            atapi->ide.base.read = 0;
-            atapi->ide.base.n_secs = 0;
+            atapi->ide.base.read = atapi_read;
             atapi->ide.slave = slave;
             atapi->ide.cmd = cmd;
             atapi->ide.ctrl = ctrl;
 
             log_info("Found ATAPI drive\n");
 
+            atapi->ide.base.n_secs = atapi_read_capacity(atapi) / 512;
+
             return;
-        }
+        } 
 
         // SATA drive detected
         if ((lba1 == SATA_LBA1) && (lba2 == SATA_LBA2)) {

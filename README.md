@@ -16,7 +16,7 @@ A 64-bit x86-64 work-in-progress legacy BIOS bootloader.
     - Paging: Identity mapping using huge pages (1gb)
 
 - Drives
-    - ATA support (reading only)
+    - (reading only) Support for ATA and ATAPI drives
 
 - Filesystems
     - FAT32 support (reading only, with subdirectories and no file limit, loading entire files only)

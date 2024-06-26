@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <sys/types.h>
 #include <types.h>
 #include <drive.h>
 #include <pci.h>
@@ -46,8 +47,10 @@
 #define ATA_CMD_READ48              0x24
 
 // ATAPI commands
+#define ATA_CMD_READ_CAPACITY       0x25
 #define ATA_CMD_IDENTIFY_PACKET     0xa1
 #define ATA_CMD_PACKET              0xa0
+#define ATA_CMD_READ                0xa8
 
 
 // ATA drive selection values
@@ -55,7 +58,8 @@ typedef enum ATA_DRIVE_SEL {
     ATA_SEL_NONE        = 0x00,
     ATA_SEL_IDENTIFY    = 0xa0,
     ATA_SEL_LBA28       = 0xe0,
-    ATA_SEL_LBA48       = 0x40
+    ATA_SEL_LBA48       = 0x40,
+    ATA_SEL_PACKET      = 0xa0,
 } ata_drive_sel_t;
 
 
